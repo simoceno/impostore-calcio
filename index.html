@@ -5,53 +5,109 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Impostore Calcio</title>
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#020806;
+  --panel:#081a14;
+  --panel2:#0f2b1f;
+  --green:#35f273;
+  --green2:#13b957;
+  --yellow:#ffd84a;
+  --red:#ff4f5e;
+  --blue:#35b7ff;
+  --text:#f5fff8;
+  --muted:#a9c9b2;
+}
 body{
   margin:0;
   min-height:100vh;
   font-family:Arial,Helvetica,sans-serif;
-  background:radial-gradient(circle at top,#1f7a3a 0,#07140d 42%,#030806 100%);
-  color:#fff;
-  padding:16px;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(53,242,115,.28),transparent 32%),
+    radial-gradient(circle at 80% 12%,rgba(53,183,255,.18),transparent 32%),
+    linear-gradient(160deg,#020806,#06140d 45%,#010302);
+  color:var(--text);
+  padding:14px;
+  overflow-x:hidden;
 }
-.app{max-width:520px;margin:0 auto}
-.header{
-  background:rgba(255,255,255,.08);
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.13;
+  background-image:
+    linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);
+  background-size:34px 34px;
+}
+.app{max-width:560px;margin:0 auto;position:relative}
+.hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:30px;
+  padding:24px 20px;
+  margin-bottom:14px;
+  background:
+    linear-gradient(135deg,rgba(53,242,115,.18),rgba(53,183,255,.08)),
+    rgba(8,26,20,.92);
   border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 20px 60px rgba(0,0,0,.45), inset 0 0 40px rgba(53,242,115,.06);
+}
+.hero:after{
+  content:"⚽";
+  position:absolute;
+  right:-8px;
+  top:4px;
+  font-size:92px;
+  opacity:.12;
+  transform:rotate(-18deg);
+}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.logoIcon{
+  width:54px;height:54px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--green),var(--yellow));
+  color:#06100a;
+  font-size:29px;
+  box-shadow:0 0 32px rgba(53,242,115,.35);
+}
+h1{margin:0;font-size:35px;line-height:.95;letter-spacing:-1.4px;text-transform:uppercase}
+h1 span{color:var(--green);text-shadow:0 0 20px rgba(53,242,115,.35)}
+p{color:var(--muted);line-height:1.42}
+.card{
+  background:linear-gradient(180deg,rgba(15,43,31,.96),rgba(8,26,20,.96));
+  border:1px solid rgba(255,255,255,.14);
   border-radius:26px;
-  padding:22px;
-  margin-bottom:16px;
+  padding:18px;
+  margin-bottom:14px;
   box-shadow:0 18px 45px rgba(0,0,0,.35);
 }
-h1{margin:0;font-size:36px;letter-spacing:-1px}
-p{color:#bdd4c4;line-height:1.45}
-.card{
-  background:#10261a;
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:24px;
-  padding:20px;
-  margin-bottom:16px;
-  box-shadow:0 15px 35px rgba(0,0,0,.25);
-}
 .screen{display:none}
-.screen.active{display:block}
+.screen.active{display:block;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 label{
   display:block;
-  margin-top:14px;
-  margin-bottom:7px;
-  font-size:13px;
-  font-weight:bold;
-  color:#bdd4c4;
+  margin:14px 0 7px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.7px;
+  color:var(--muted);
   text-transform:uppercase;
 }
 input,select{
   width:100%;
   padding:15px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.18);
-  background:#06150c;
+  border-radius:17px;
+  border:1px solid rgba(255,255,255,.15);
+  background:#03100b;
   color:#fff;
-  font-size:18px;
+  font-size:17px;
+  outline:none;
 }
 button{
   width:100%;
@@ -59,62 +115,206 @@ button{
   padding:17px;
   border:0;
   border-radius:18px;
-  background:#29db70;
-  color:#031007;
-  font-size:18px;
-  font-weight:900;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:#021007;
+  font-size:17px;
+  font-weight:950;
+  letter-spacing:.2px;
   cursor:pointer;
+  box-shadow:0 10px 28px rgba(53,242,115,.23);
 }
-button.secondary{background:#233c2c;color:#fff;border:1px solid rgba(255,255,255,.16)}
-button.yellow{background:#f6d84a;color:#111}
+button.secondary{
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:none;
+}
+button.yellow{
+  background:linear-gradient(135deg,var(--yellow),#ffaf25);
+  color:#111;
+  box-shadow:0 10px 28px rgba(255,216,74,.18);
+}
+button.redbtn{
+  background:linear-gradient(135deg,var(--red),#b91429);
+  color:#fff;
+  box-shadow:none;
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .center{text-align:center}
-.big{font-size:52px;font-weight:900;margin:8px 0 14px}
-.secretbox{
-  min-height:190px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  margin:20px 0;
-  background:#06150c;
-  border:1px dashed rgba(255,255,255,.35);
-  border-radius:24px;
-}
-.secret{font-size:38px;font-weight:900;line-height:1.05;word-break:break-word}
-.red{color:#ff5d5d}
-.muted{color:#bdd4c4}
-.rule{
-  background:rgba(255,255,255,.07);
-  border-radius:16px;
-  padding:12px;
-  margin-top:10px;
-  color:#bdd4c4;
-}
 .badge{
-  display:inline-block;
+  display:inline-flex;
+  gap:7px;
+  align-items:center;
   padding:8px 12px;
   border-radius:999px;
   background:rgba(255,255,255,.1);
-  color:#bdd4c4;
-  font-size:13px;
-  font-weight:bold;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
 }
-.small{font-size:14px;color:#bdd4c4}
-.footer{text-align:center;font-size:12px;color:rgba(255,255,255,.45);padding:12px}
+.rule{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:12px;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:14px;
+}
+.playerRow{
+  display:grid;
+  grid-template-columns:48px 1fr 42px;
+  gap:10px;
+  align-items:center;
+  margin-top:9px;
+}
+.avatar{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+  background:radial-gradient(circle at 30% 20%,#fff 0,#ffe0b2 22%,#c47135 72%);
+  border:2px solid rgba(53,242,115,.7);
+  box-shadow:0 0 18px rgba(53,242,115,.2);
+}
+.avatar.bigAvatar{
+  width:88px;height:88px;font-size:52px;margin:0 auto 10px;
+  border-width:3px;
+}
+.avatar.imp{
+  background:radial-gradient(circle at 50% 30%,#222,#000 70%);
+  border-color:var(--red);
+  box-shadow:0 0 25px rgba(255,79,94,.4);
+}
+.removeBtn{
+  width:42px;
+  height:42px;
+  padding:0;
+  margin:0;
+  border-radius:14px;
+  background:rgba(255,79,94,.16);
+  color:#ffb8bf;
+  border:1px solid rgba(255,79,94,.35);
+  box-shadow:none;
+}
+.playersPreview{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:12px;
+}
+.previewItem{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:17px;
+  padding:10px 6px;
+  text-align:center;
+}
+.previewItem .avatar{margin:0 auto 6px;width:44px;height:44px;font-size:25px}
+.previewItem div:last-child{
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.big{
+  font-size:42px;
+  font-weight:950;
+  margin:5px 0 8px;
+}
+.secretbox{
+  position:relative;
+  min-height:220px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  margin:18px 0;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(53,242,115,.13),transparent 45%),
+    #03100b;
+  border:1px dashed rgba(255,255,255,.32);
+  border-radius:26px;
+  overflow:hidden;
+}
+.secretbox:before{
+  content:"";
+  position:absolute;
+  width:180px;height:180px;
+  border-radius:50%;
+  background:rgba(53,242,115,.08);
+  filter:blur(8px);
+}
+.secret{position:relative;font-size:35px;font-weight:950;line-height:1.02;word-break:break-word}
+.red{color:var(--red);text-shadow:0 0 20px rgba(255,79,94,.35)}
+.muted{color:var(--muted)}
+.playerNameTurn{
+  font-size:22px;
+  font-weight:950;
+  color:#fff;
+}
+.effectBall{
+  display:inline-block;
+  animation:bounce 1.1s infinite ease-in-out;
+}
+@keyframes bounce{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(15deg)}}
+.shine{
+  position:relative;
+  overflow:hidden;
+}
+.shine:after{
+  content:"";
+  position:absolute;
+  top:0;left:-80%;
+  width:45%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.26),transparent);
+  transform:skewX(-20deg);
+  animation:shine 2.6s infinite;
+}
+@keyframes shine{0%{left:-80%}55%,100%{left:130%}}
+.voteGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:14px;
+}
+.voteCard{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:12px 6px;
+  text-align:center;
+}
+.voteCard .avatar{margin:0 auto 7px}
+.footer{text-align:center;font-size:12px;color:rgba(255,255,255,.44);padding:12px}
+.hidden{display:none}
 </style>
 </head>
 <body>
 <div class="app">
 
-<div class="header">
-  <h1>⚽ Impostore Calcio</h1>
-  <p>Il gioco dell'impostore con i calciatori famosi. Passate il telefono uno alla volta: tutti vedono lo stesso nome, tranne l'impostore.</p>
+<div class="hero shine">
+  <div class="logo">
+    <div class="logoIcon">🕵️</div>
+    <div>
+      <h1>Impostore <span>Calcio</span></h1>
+      <p>Metti i nomi dei tuoi amici, passa il telefono e scopri chi sta bluffando.</p>
+    </div>
+  </div>
 </div>
 
 <div id="setup" class="screen active">
   <div class="card">
-    <label>Numero giocatori</label>
-    <input id="players" type="number" min="3" max="20" value="6">
+    <span class="badge">⚙️ Setup partita</span>
+
+    <label>Nome giocatore</label>
+    <div class="grid2">
+      <input id="newPlayerName" type="text" placeholder="Es. Simone">
+      <button onclick="addPlayer()" style="margin-top:0">AGGIUNGI</button>
+    </div>
+
+    <div id="playersList"></div>
 
     <label>Numero impostori</label>
     <select id="impostorsCount">
@@ -123,7 +323,7 @@ button.yellow{background:#f6d84a;color:#111}
       <option value="3">3 impostori</option>
     </select>
 
-    <label>Categoria</label>
+    <label>Categoria calciatori</label>
     <select id="category">
       <option value="all">Tutti i calciatori</option>
       <option value="legends">Solo leggende</option>
@@ -133,59 +333,68 @@ button.yellow{background:#f6d84a;color:#111}
       <option value="world">Mondiali / Nazionali</option>
     </select>
 
-    <div class="rule">1. Ogni giocatore guarda la propria carta senza farla vedere.</div>
-    <div class="rule">2. A turno dite una frase sul calciatore.</div>
-    <div class="rule">3. Votate chi secondo voi e' l'impostore.</div>
+    <div class="rule">Ogni giocatore vedrà il proprio nome sullo schermo prima della carta.</div>
+    <div class="rule">Tutti vedono lo stesso calciatore, tranne gli impostori.</div>
 
-    <button onclick="startGame()">INIZIA PARTITA</button>
+    <button onclick="startGame()">🚀 AVVIA PARTITA</button>
+  </div>
+
+  <div class="card">
+    <span class="badge">👥 Anteprima giocatori</span>
+    <div id="previewPlayers" class="playersPreview"></div>
   </div>
 </div>
 
 <div id="game" class="screen">
   <div class="card center">
-    <span class="badge">Passa il telefono</span>
-    <p class="muted">Tocca al giocatore</p>
+    <span class="badge">📱 Passa il telefono</span>
+    <p class="muted">Tocca a</p>
+    <div id="turnAvatar" class="avatar bigAvatar">🙂</div>
+    <div id="playerNameTurn" class="playerNameTurn">Giocatore</div>
     <div id="playerNumber" class="big">1</div>
 
     <div id="cardBox" class="secretbox">
       <div class="muted">Premi mostra carta</div>
     </div>
 
-    <button class="yellow" onclick="showCard()">MOSTRA CARTA</button>
-    <button class="secondary" onclick="hideCard()">NASCONDI CARTA</button>
-    <button class="secondary" onclick="nextPlayer()">HO VISTO, PASSA AVANTI</button>
+    <button class="yellow" onclick="showCard()">👀 MOSTRA CARTA</button>
+    <button class="secondary" onclick="hideCard()">🙈 NASCONDI CARTA</button>
+    <button class="secondary" onclick="nextPlayer()">✅ HO VISTO, PASSA AVANTI</button>
   </div>
 </div>
 
 <div id="discussion" class="screen">
   <div class="card center">
-    <h2>Ora si gioca 👀</h2>
-    <p>Fate un giro di frasi sul calciatore. L'impostore deve provare a non farsi scoprire.</p>
-    <button onclick="revealResult()">RIVELA SOLUZIONE</button>
+    <span class="badge">🔥 Discussione</span>
+    <h2>Chi è l'impostore?</h2>
+    <p>Fate un giro di frasi sul calciatore. L'impostore deve improvvisare senza farsi scoprire.</p>
+    <div id="votePreview" class="voteGrid"></div>
+    <button onclick="revealResult()">🏆 RIVELA SOLUZIONE</button>
   </div>
 </div>
 
 <div id="result" class="screen">
   <div class="card center">
-    <h2>Soluzione</h2>
+    <span class="badge">🏁 Risultato</span>
     <p>Il calciatore era:</p>
     <div id="finalPlayer" class="secret"></div>
-    <p>L'impostore era:</p>
+    <p>Impostore/i:</p>
     <div id="finalImpostors" class="secret red"></div>
 
-    <button onclick="startGame()">NUOVO ROUND</button>
-    <button class="secondary" onclick="goMenu()">TORNA AL MENU</button>
+    <button onclick="startGame()">🔁 NUOVO ROUND</button>
+    <button class="secondary" onclick="goMenu()">⚙️ TORNA AL MENU</button>
   </div>
 </div>
 
-<div class="footer">Creato per giocare da mobile</div>
+<div class="footer">Impostore Calcio • mobile game</div>
 </div>
 
 <script>
 var currentPlayer = 1;
-var players = 6;
 var impostors = [];
 var chosenPlayer = "";
+var gamePlayers = ["Simone","Marco","Luca","Davide","Matteo","Francesco"];
+var avatarFaces = ["😎","🤠","🧔‍♂️","👨‍🦱","👨‍🦲","🧑‍🦰","👱‍♂️","🧑‍🦱","🙂","😁","😏","🤨","🫡","🥸","😈"];
 
 var lists = {
   legends: [
@@ -234,10 +443,11 @@ var lists = {
     "Gerard Pique","David Villa","Fernando Torres"
   ]
 };
-
 lists.all = [].concat(lists.legends, lists.modern, lists.italy, lists.premier, lists.world);
 
 function d(id){ return document.getElementById(id); }
+
+function faceFor(i){ return avatarFaces[i % avatarFaces.length]; }
 
 function openScreen(id){
   d("setup").className = "screen";
@@ -248,6 +458,46 @@ function openScreen(id){
   window.scrollTo(0,0);
 }
 
+function renderPlayers(){
+  var html = "";
+  for(var i=0;i<gamePlayers.length;i++){
+    html += '<div class="playerRow">';
+    html += '<div class="avatar">'+faceFor(i)+'</div>';
+    html += '<input value="'+gamePlayers[i].replace(/"/g,"&quot;")+'" onchange="updatePlayer('+i+', this.value)">';
+    html += '<button class="removeBtn" onclick="removePlayer('+i+')">×</button>';
+    html += '</div>';
+  }
+  d("playersList").innerHTML = html;
+
+  var prev = "";
+  for(var j=0;j<gamePlayers.length;j++){
+    prev += '<div class="previewItem"><div class="avatar">'+faceFor(j)+'</div><div>'+gamePlayers[j]+'</div></div>';
+  }
+  d("previewPlayers").innerHTML = prev;
+}
+
+function updatePlayer(index,value){
+  value = value.trim();
+  if(value.length === 0){ value = "Giocatore " + (index+1); }
+  gamePlayers[index] = value;
+  renderPlayers();
+}
+
+function addPlayer(){
+  var name = d("newPlayerName").value.trim();
+  if(name.length === 0){ name = "Giocatore " + (gamePlayers.length + 1); }
+  if(gamePlayers.length >= 20){ alert("Massimo 20 giocatori"); return; }
+  gamePlayers.push(name);
+  d("newPlayerName").value = "";
+  renderPlayers();
+}
+
+function removePlayer(index){
+  if(gamePlayers.length <= 3){ alert("Servono almeno 3 giocatori"); return; }
+  gamePlayers.splice(index,1);
+  renderPlayers();
+}
+
 function getRandomItem(arr){
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -255,40 +505,41 @@ function getRandomItem(arr){
 function createImpostors(count){
   var result = [];
   while(result.length < count){
-    var n = Math.floor(Math.random() * players) + 1;
-    if(result.indexOf(n) === -1){
-      result.push(n);
-    }
+    var n = Math.floor(Math.random() * gamePlayers.length);
+    if(result.indexOf(n) === -1){ result.push(n); }
   }
   return result;
 }
 
 function startGame(){
-  players = parseInt(d("players").value, 10);
-  if(isNaN(players)){ players = 6; }
-  if(players < 3){ players = 3; }
-  if(players > 20){ players = 20; }
+  if(gamePlayers.length < 3){ alert("Servono almeno 3 giocatori"); return; }
 
   var count = parseInt(d("impostorsCount").value, 10);
-  if(count >= players){ count = 1; }
+  if(count >= gamePlayers.length){ count = 1; }
 
   var cat = d("category").value;
   var list = lists[cat] || lists.all;
 
-  currentPlayer = 1;
+  currentPlayer = 0;
   impostors = createImpostors(count);
   chosenPlayer = getRandomItem(list);
 
-  d("playerNumber").innerHTML = currentPlayer;
+  setTurn();
   hideCard();
   openScreen("game");
 }
 
+function setTurn(){
+  d("playerNumber").innerHTML = "Giocatore " + (currentPlayer + 1) + " / " + gamePlayers.length;
+  d("playerNameTurn").innerHTML = gamePlayers[currentPlayer];
+  d("turnAvatar").innerHTML = faceFor(currentPlayer);
+}
+
 function showCard(){
   if(impostors.indexOf(currentPlayer) !== -1){
-    d("cardBox").innerHTML = '<div class="secret red">IMPOSTORE</div>';
+    d("cardBox").innerHTML = '<div class="avatar bigAvatar imp">🕵️</div><div class="secret red">IMPOSTORE</div>';
   }else{
-    d("cardBox").innerHTML = '<div class="secret">' + chosenPlayer + '</div>';
+    d("cardBox").innerHTML = '<div class="effectBall" style="font-size:48px">⚽</div><div class="secret">' + chosenPlayer + '</div>';
   }
 }
 
@@ -298,23 +549,35 @@ function hideCard(){
 
 function nextPlayer(){
   hideCard();
-  if(currentPlayer < players){
+  if(currentPlayer < gamePlayers.length - 1){
     currentPlayer++;
-    d("playerNumber").innerHTML = currentPlayer;
+    setTurn();
   }else{
+    renderVotePreview();
     openScreen("discussion");
   }
 }
 
+function renderVotePreview(){
+  var html = "";
+  for(var i=0;i<gamePlayers.length;i++){
+    html += '<div class="voteCard"><div class="avatar">'+faceFor(i)+'</div><div>'+gamePlayers[i]+'</div></div>';
+  }
+  d("votePreview").innerHTML = html;
+}
+
 function revealResult(){
-  d("finalPlayer").innerHTML = chosenPlayer;
-  d("finalImpostors").innerHTML = impostors.map(function(n){ return "Giocatore " + n; }).join("<br>");
+  d("finalPlayer").innerHTML = '<span class="effectBall">⚽</span><br>' + chosenPlayer;
+  var names = impostors.map(function(i){ return gamePlayers[i]; }).join("<br>");
+  d("finalImpostors").innerHTML = names;
   openScreen("result");
 }
 
 function goMenu(){
   openScreen("setup");
 }
+
+renderPlayers();
 </script>
 </body>
 </html>
