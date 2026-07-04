@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impostore Calcio</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  background:radial-gradient(circle at top,#1f7a3a 0,#07140d 42%,#030806 100%);
+  color:#fff;
+  padding:16px;
+}
+.app{max-width:520px;margin:0 auto}
+.header{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:26px;
+  padding:22px;
+  margin-bottom:16px;
+  box-shadow:0 18px 45px rgba(0,0,0,.35);
+}
+h1{margin:0;font-size:36px;letter-spacing:-1px}
+p{color:#bdd4c4;line-height:1.45}
+.card{
+  background:#10261a;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:24px;
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:0 15px 35px rgba(0,0,0,.25);
+}
+.screen{display:none}
+.screen.active{display:block}
+label{
+  display:block;
+  margin-top:14px;
+  margin-bottom:7px;
+  font-size:13px;
+  font-weight:bold;
+  color:#bdd4c4;
+  text-transform:uppercase;
+}
+input,select{
+  width:100%;
+  padding:15px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.18);
+  background:#06150c;
+  color:#fff;
+  font-size:18px;
+}
+button{
+  width:100%;
+  margin-top:12px;
+  padding:17px;
+  border:0;
+  border-radius:18px;
+  background:#29db70;
+  color:#031007;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+}
+button.secondary{background:#233c2c;color:#fff;border:1px solid rgba(255,255,255,.16)}
+button.yellow{background:#f6d84a;color:#111}
+.center{text-align:center}
+.big{font-size:52px;font-weight:900;margin:8px 0 14px}
+.secretbox{
+  min-height:190px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  margin:20px 0;
+  background:#06150c;
+  border:1px dashed rgba(255,255,255,.35);
+  border-radius:24px;
+}
+.secret{font-size:38px;font-weight:900;line-height:1.05;word-break:break-word}
+.red{color:#ff5d5d}
+.muted{color:#bdd4c4}
+.rule{
+  background:rgba(255,255,255,.07);
+  border-radius:16px;
+  padding:12px;
+  margin-top:10px;
+  color:#bdd4c4;
+}
+.badge{
+  display:inline-block;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.1);
+  color:#bdd4c4;
+  font-size:13px;
+  font-weight:bold;
+}
+.small{font-size:14px;color:#bdd4c4}
+.footer{text-align:center;font-size:12px;color:rgba(255,255,255,.45);padding:12px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <h1>⚽ Impostore Calcio</h1>
+  <p>Il gioco dell'impostore con i calciatori famosi. Passate il telefono uno alla volta: tutti vedono lo stesso nome, tranne l'impostore.</p>
+</div>
+
+<div id="setup" class="screen active">
+  <div class="card">
+    <label>Numero giocatori</label>
+    <input id="players" type="number" min="3" max="20" value="6">
+
+    <label>Numero impostori</label>
+    <select id="impostorsCount">
+      <option value="1">1 impostore</option>
+      <option value="2">2 impostori</option>
+      <option value="3">3 impostori</option>
+    </select>
+
+    <label>Categoria</label>
+    <select id="category">
+      <option value="all">Tutti i calciatori</option>
+      <option value="legends">Solo leggende</option>
+      <option value="modern">Solo moderni</option>
+      <option value="italy">Italia / Serie A</option>
+      <option value="premier">Premier League</option>
+      <option value="world">Mondiali / Nazionali</option>
+    </select>
+
+    <div class="rule">1. Ogni giocatore guarda la propria carta senza farla vedere.</div>
+    <div class="rule">2. A turno dite una frase sul calciatore.</div>
+    <div class="rule">3. Votate chi secondo voi e' l'impostore.</div>
+
+    <button onclick="startGame()">INIZIA PARTITA</button>
+  </div>
+</div>
+
+<div id="game" class="screen">
+  <div class="card center">
+    <span class="badge">Passa il telefono</span>
+    <p class="muted">Tocca al giocatore</p>
+    <div id="playerNumber" class="big">1</div>
+
+    <div id="cardBox" class="secretbox">
+      <div class="muted">Premi mostra carta</div>
+    </div>
+
+    <button class="yellow" onclick="showCard()">MOSTRA CARTA</button>
+    <button class="secondary" onclick="hideCard()">NASCONDI CARTA</button>
+    <button class="secondary" onclick="nextPlayer()">HO VISTO, PASSA AVANTI</button>
+  </div>
+</div>
+
+<div id="discussion" class="screen">
+  <div class="card center">
+    <h2>Ora si gioca 👀</h2>
+    <p>Fate un giro di frasi sul calciatore. L'impostore deve provare a non farsi scoprire.</p>
+    <button onclick="revealResult()">RIVELA SOLUZIONE</button>
+  </div>
+</div>
+
+<div id="result" class="screen">
+  <div class="card center">
+    <h2>Soluzione</h2>
+    <p>Il calciatore era:</p>
+    <div id="finalPlayer" class="secret"></div>
+    <p>L'impostore era:</p>
+    <div id="finalImpostors" class="secret red"></div>
+
+    <button onclick="startGame()">NUOVO ROUND</button>
+    <button class="secondary" onclick="goMenu()">TORNA AL MENU</button>
+  </div>
+</div>
+
+<div class="footer">Creato per giocare da mobile</div>
+</div>
+
+<script>
+var currentPlayer = 1;
+var players = 6;
+var impostors = [];
+var chosenPlayer = "";
+
+var lists = {
+  legends: [
+    "Pele","Diego Maradona","Johan Cruyff","Zinedine Zidane","Ronaldo Nazario","Ronaldinho",
+    "Roberto Baggio","Paolo Maldini","Francesco Totti","Alessandro Del Piero","Andrea Pirlo",
+    "Gianluigi Buffon","Kaka","David Beckham","Thierry Henry","Raul","George Best",
+    "Franz Beckenbauer","Michel Platini","Marco van Basten","Gerd Muller","Eusebio",
+    "Cafu","Roberto Carlos","Clarence Seedorf","Samuel Eto'o","Didier Drogba",
+    "Andriy Shevchenko","Filippo Inzaghi","Gabriel Batistuta","Zico","Rivaldo",
+    "Luis Figo","Carles Puyol","Xavi","Andres Iniesta","Iker Casillas","Oliver Kahn",
+    "Alessandro Nesta","Fabio Cannavaro","Gennaro Gattuso","Edgar Davids","Patrick Vieira"
+  ],
+  modern: [
+    "Lionel Messi","Cristiano Ronaldo","Kylian Mbappe","Erling Haaland","Neymar","Vinicius Junior",
+    "Jude Bellingham","Kevin De Bruyne","Mohamed Salah","Harry Kane","Luka Modric",
+    "Robert Lewandowski","Karim Benzema","Antoine Griezmann","Pedri","Lamine Yamal",
+    "Bukayo Saka","Phil Foden","Rodri","Federico Valverde","Virgil van Dijk","Thibaut Courtois",
+    "Manuel Neuer","Achraf Hakimi","Lautaro Martinez","Victor Osimhen","Rafael Leao",
+    "Paulo Dybala","Angel Di Maria","Son Heung-min","Bruno Fernandes","Bernardo Silva",
+    "Jamal Musiala","Florian Wirtz","Declan Rice","Cole Palmer","Martin Odegaard",
+    "Darwin Nunez","Alisson Becker","Ederson","Ruben Dias","Joao Felix"
+  ],
+  italy: [
+    "Roberto Baggio","Francesco Totti","Alessandro Del Piero","Andrea Pirlo","Gianluigi Buffon",
+    "Paolo Maldini","Fabio Cannavaro","Gennaro Gattuso","Filippo Inzaghi","Christian Vieri",
+    "Gianluca Vialli","Gianfranco Zola","Roberto Mancini","Daniele De Rossi","Alessandro Nesta",
+    "Federico Chiesa","Nicolo Barella","Lorenzo Insigne","Ciro Immobile","Gianluigi Donnarumma",
+    "Zlatan Ibrahimovic","Kaka","Andriy Shevchenko","Diego Milito","Edinson Cavani",
+    "Lautaro Martinez","Paulo Dybala","Victor Osimhen","Rafael Leao","Khvicha Kvaratskhelia",
+    "Hakan Calhanoglu","Romelu Lukaku","Dusan Vlahovic","Luca Toni","Antonio Cassano"
+  ],
+  premier: [
+    "Mohamed Salah","Kevin De Bruyne","Erling Haaland","Bukayo Saka","Phil Foden","Harry Kane",
+    "Wayne Rooney","Steven Gerrard","Frank Lampard","Thierry Henry","Didier Drogba",
+    "Cristiano Ronaldo","David Beckham","Paul Scholes","Ryan Giggs","Sergio Aguero",
+    "Eden Hazard","Virgil van Dijk","Alisson Becker","Son Heung-min","Bruno Fernandes",
+    "Cole Palmer","Declan Rice","Martin Odegaard","Darwin Nunez","Rodri","Ruben Dias",
+    "Bernardo Silva","Jack Grealish","Marcus Rashford"
+  ],
+  world: [
+    "Lionel Messi","Cristiano Ronaldo","Neymar","Kylian Mbappe","Diego Maradona","Pele",
+    "Ronaldo Nazario","Zinedine Zidane","Ronaldinho","Luka Modric","Andres Iniesta",
+    "Xavi","Iker Casillas","Gianluigi Buffon","Fabio Cannavaro","Miroslav Klose",
+    "Thomas Muller","Manuel Neuer","Angel Di Maria","Antoine Griezmann","Paul Pogba",
+    "Kaka","Roberto Carlos","Cafu","Luis Suarez","Edinson Cavani","Sergio Ramos",
+    "Gerard Pique","David Villa","Fernando Torres"
+  ]
+};
+
+lists.all = [].concat(lists.legends, lists.modern, lists.italy, lists.premier, lists.world);
+
+function d(id){ return document.getElementById(id); }
+
+function openScreen(id){
+  d("setup").className = "screen";
+  d("game").className = "screen";
+  d("discussion").className = "screen";
+  d("result").className = "screen";
+  d(id).className = "screen active";
+  window.scrollTo(0,0);
+}
+
+function getRandomItem(arr){
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function createImpostors(count){
+  var result = [];
+  while(result.length < count){
+    var n = Math.floor(Math.random() * players) + 1;
+    if(result.indexOf(n) === -1){
+      result.push(n);
+    }
+  }
+  return result;
+}
+
+function startGame(){
+  players = parseInt(d("players").value, 10);
+  if(isNaN(players)){ players = 6; }
+  if(players < 3){ players = 3; }
+  if(players > 20){ players = 20; }
+
+  var count = parseInt(d("impostorsCount").value, 10);
+  if(count >= players){ count = 1; }
+
+  var cat = d("category").value;
+  var list = lists[cat] || lists.all;
+
+  currentPlayer = 1;
+  impostors = createImpostors(count);
+  chosenPlayer = getRandomItem(list);
+
+  d("playerNumber").innerHTML = currentPlayer;
+  hideCard();
+  openScreen("game");
+}
+
+function showCard(){
+  if(impostors.indexOf(currentPlayer) !== -1){
+    d("cardBox").innerHTML = '<div class="secret red">IMPOSTORE</div>';
+  }else{
+    d("cardBox").innerHTML = '<div class="secret">' + chosenPlayer + '</div>';
+  }
+}
+
+function hideCard(){
+  d("cardBox").innerHTML = '<div class="muted">Premi mostra carta</div>';
+}
+
+function nextPlayer(){
+  hideCard();
+  if(currentPlayer < players){
+    currentPlayer++;
+    d("playerNumber").innerHTML = currentPlayer;
+  }else{
+    openScreen("discussion");
+  }
+}
+
+function revealResult(){
+  d("finalPlayer").innerHTML = chosenPlayer;
+  d("finalImpostors").innerHTML = impostors.map(function(n){ return "Giocatore " + n; }).join("<br>");
+  openScreen("result");
+}
+
+function goMenu(){
+  openScreen("setup");
+}
+</script>
+</body>
+</html>
